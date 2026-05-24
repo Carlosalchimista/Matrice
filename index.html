@@ -61,41 +61,37 @@
       <div class="box">
         <h3>Scopo Personale</h3>
         <div id="scopoPersonale" class="big">-</div>
-        <div id="terraCielo" class="note"></div>
+        <div id="notePersonale" class="note"></div>
       </div>
       <div class="box">
         <h3>Scopo Sociale</h3>
         <div id="scopoSociale" class="big">-</div>
-        <div id="discendenze" class="note"></div>
+        <div id="noteSociale" class="note"></div>
       </div>
       <div class="box">
         <h3>Scopo Spirituale</h3>
         <div id="scopoSpirituale" class="big">-</div>
-        <div class="note">Equilibrio armonizzato dei due scopi</div>
+        <div id="noteSpirituale" class="note"></div>
       </div>
     </div>
 
     <div class="prognosi">
       <h3 style="margin:0 0 16px;color:#324155; font-size: 18px;">Prognosi Evolutiva (Anni 0 → 80)</h3>
 
-      <div style="display:flex; gap:24px; align-items: flex-start; margin-bottom:20px;">
-        <div class="controls">
-          <div style="display:flex; flex-direction:column; gap:8px; width: 100%;">
-            <label style="font-weight: 600; color: #5b2fa6;">Seleziona Età:</label>
-            <div style="display:flex; align-items:center; gap:12px;">
-              <input id="ageSlider" type="range" min="0" max="80" value="0" oninput="showAge(this.value)">
-              <div id="selectedAge" style="font-weight:700; font-size: 20px; color:#222; min-width: 80px; text-align: right;">0</div>
-            </div>
+      <div style="display:flex; flex-direction:column; gap:16px; margin-bottom:20px;">
+        <div style="display:flex; flex-direction:column; gap:8px;">
+          <label style="font-weight: 600; color: #5b2fa6;">Seleziona Età:</label>
+          <div style="display:flex; align-items:center; gap:12px;">
+            <input id="ageSlider" type="range" min="0" max="80" value="0" oninput="showAge(this.value)" style="flex:1; accent-color:#5b2fa6; cursor:pointer;">
+            <div id="selectedAge" style="font-weight:700; font-size: 20px; color:#222; min-width: 80px; text-align: right;">0</div>
           </div>
         </div>
 
-        <div id="arcanaDisplay" class="arcanaBox">
+        <div id="arcanaDisplay" class="arcanaBox" style="max-width:100%;">
           <h4 id="arcanaTitle">Arcano</h4>
           <p id="arcanaDesc">Sposta lo slider sopra per visualizzare l'energia predominante nell'anno selezionato.</p>
         </div>
       </div>
-
-      <div id="yearGrid" class="grid"></div>
 
       <div style="margin-top:24px; border-top: 1px solid #eee; padding-top: 20px;">
         <h4 style="margin:0 0 12px; color: #6b7280; font-weight: 500;">Lista completa dei cicli annuali</h4>
@@ -326,24 +322,15 @@ function calcola() {
   const spirituale = reduceTo22(personale + sociale);
 
   document.getElementById('scopoPersonale').innerText  = personale;
-  document.getElementById('terraCielo').innerText      = `Terra (A+C): ${terra} | Cielo (B+D): ${cielo}`;
+  document.getElementById('notePersonale').innerText   = (arcanaMap[personale] || {name:''}).name;
   document.getElementById('scopoSociale').innerText    = sociale;
-  document.getElementById('discendenze').innerText     = `Paterno: ${paterno} | Materno: ${materno}`;
+  document.getElementById('noteSociale').innerText     = (arcanaMap[sociale]   || {name:''}).name;
   document.getElementById('scopoSpirituale').innerText = spirituale;
+  document.getElementById('noteSpirituale').innerText  = (arcanaMap[spirituale]|| {name:''}).name;
   document.getElementById('output').style.display      = 'block';
 
   const ages = buildAgeSeries_det(letters);
   window._md_ages = ages;
-
-  // griglia decadi
-  const yearGrid = document.getElementById('yearGrid');
-  yearGrid.innerHTML = '';
-  for (let dec = 0; dec <= 80; dec += 10) {
-    const cell = document.createElement('div');
-    cell.className = 'year';
-    cell.innerHTML = `<div style="color:#6b7280; font-weight: 500;">Età ${dec}</div><b>${ages[dec]}</b>`;
-    yearGrid.appendChild(cell);
-  }
 
   // lista completa
   const all = document.getElementById('allValues');
