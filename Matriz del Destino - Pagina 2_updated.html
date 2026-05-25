@@ -1,0 +1,396 @@
+<!doctype html>
+<html lang="it">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Matrice del Destino — Approfondimenti</title>
+<style>
+  body{font-family:Inter,Segoe UI,Arial,sans-serif; background:#f6f7fb; color:#222; margin:0; padding:28px; display:flex; justify-content:center;}
+  .card{background:#fff; padding:24px; border-radius:14px; width:1100px; max-width:98vw; box-shadow:0 10px 30px rgba(20,30,50,0.06);}
+  h1{color:#5b2fa6;margin:0 0 4px; font-weight:600;}
+  .subtitle{color:#7c6fa0; font-size:14px; margin-bottom:24px;}
+  .back-link{display:inline-block; margin-bottom:20px; color:#5b2fa6; font-size:14px; text-decoration:none; font-weight:600;}
+  .back-link:hover{opacity:0.7;}
+  .section{margin-bottom:36px; border-top:1px solid #eee; padding-top:24px;}
+  .section:first-of-type{border-top:none; padding-top:0;}
+  .section-title{color:#324155; font-size:18px; font-weight:700; margin:0 0 6px;}
+  .section-desc{color:#7c6fa0; font-size:13px; margin:0 0 16px;}
+  .row{display:flex;gap:12px;margin-bottom:16px;align-items:center;flex-wrap:wrap;}
+  input[type=number]{width:120px;padding:11px;border:1px solid #e6e9ef;border-radius:8px;font-size:15px;text-align:center; outline:none;}
+  input[type=number]:focus{border-color:#5b2fa6;}
+  button{padding:11px 22px;border-radius:8px;border:none;background:#5b2fa6;color:#fff;font-weight:600;cursor:pointer;transition:opacity 0.2s;}
+  button:hover{opacity:0.9;}
+  .cards{display:flex;gap:14px;margin-bottom:16px;flex-wrap:wrap;}
+  .box{flex:1;min-width:200px;background:#fbfdff;border-radius:10px;padding:16px;border-left:6px solid #efe6fb;}
+  .box h3{margin:0 0 6px;font-size:13px;color:#5b2fa6;text-transform:uppercase;letter-spacing:0.5px;}
+  .big{font-size:30px;font-weight:700;}
+  .note{font-size:13px;color:#6b7280;margin-top:6px;}
+  .resultBox{background:#f8f5ff;border-left:6px solid #5b2fa6;padding:20px;border-radius:12px;margin-top:16px;box-shadow:0 4px 12px rgba(91,47,166,0.04);}
+  .resultBox h4{margin:0 0 8px;color:#5b2fa6;font-size:17px;font-weight:700;}
+  .resultBox p{margin:0 0 8px;color:#4a5568;font-size:14.5px;line-height:1.6;}
+  .resultBox ul{margin:6px 0 0 18px;color:#444;font-size:14px;line-height:1.8;}
+  .resultBox .seed{margin-top:10px;color:#7c6fa0;font-size:13px;font-style:italic;}
+  .compatRow{display:flex;gap:14px;flex-wrap:wrap;margin-top:16px;}
+  .compatCol{flex:1;min-width:220px;background:#fff;border-radius:10px;padding:14px;border:1px solid #eef2f5;}
+  .compatCol h5{margin:0 0 6px;color:#5b2fa6;font-size:13px;text-transform:uppercase;letter-spacing:0.5px;}
+  .compatCol .num{font-size:26px;font-weight:700;color:#222;}
+  .compatCol .arcname{font-size:13px;color:#6b7280;margin-top:4px;}
+  .compatCol .arcdesc{font-size:13px;color:#444;margin-top:6px;line-height:1.5;}
+  .hidden{display:none;}
+  label.field-label{font-size:13px;color:#5b2fa6;font-weight:600;display:block;margin-bottom:4px;}
+  .input-group{display:flex;flex-direction:column;gap:4px;}
+  .person-block{background:#fbfdff;border-radius:10px;padding:16px;border:1px solid #eef2f5;flex:1;min-width:260px;}
+  .person-block h4{margin:0 0 12px;color:#324155;font-size:15px;font-weight:700;}
+</style>
+</head>
+<body>
+<div class="card">
+  <a class="back-link" href="index.html">← Torna alla Matrice principale</a>
+  <h1>Matrice del Destino — Approfondimenti</h1>
+  <p class="subtitle">Fulcro · Compatibilità · Ciclo dell'Anno</p>
+
+  <!-- ══════════════════════════════════════════
+       SEZIONE 1 — FULCRO
+  ══════════════════════════════════════════ -->
+  <div class="section">
+    <div class="section-title">🔑 Il tuo Fulcro</div>
+    <div class="section-desc">La tua zona di comfort naturale — l'energia a cui torni sempre, il tuo punto di equilibrio interiore.</div>
+
+    <div class="row">
+      <div class="input-group">
+        <label class="field-label">Giorno</label>
+        <input id="f_day" type="number" placeholder="GG" min="1" max="31" value="10">
+      </div>
+      <div class="input-group">
+        <label class="field-label">Mese</label>
+        <input id="f_month" type="number" placeholder="MM" min="1" max="12" value="6">
+      </div>
+      <div class="input-group">
+        <label class="field-label">Anno</label>
+        <input id="f_year" type="number" placeholder="AAAA" min="1000" max="9999" value="1984">
+      </div>
+      <button onclick="calcFulcro()">Calcola Fulcro</button>
+    </div>
+
+    <div id="fulcroResult" class="hidden">
+      <div class="cards">
+        <div class="box">
+          <h3>Fulcro (E)</h3>
+          <div id="fulcroNum" class="big">-</div>
+          <div id="fulcroName" class="note"></div>
+        </div>
+      </div>
+      <div id="fulcroBox" class="resultBox"></div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════
+       SEZIONE 2 — COMPATIBILITÀ
+  ══════════════════════════════════════════ -->
+  <div class="section">
+    <div class="section-title">💞 Compatibilità tra due persone</div>
+    <div class="section-desc">Inserisci le date di nascita di due persone per vedere come le loro energie si incontrano su ogni piano.</div>
+
+    <div class="row" style="align-items:flex-start;">
+      <div class="person-block">
+        <h4>Persona 1</h4>
+        <div class="row">
+          <div class="input-group">
+            <label class="field-label">Giorno</label>
+            <input id="p1_day" type="number" placeholder="GG" min="1" max="31" value="10">
+          </div>
+          <div class="input-group">
+            <label class="field-label">Mese</label>
+            <input id="p1_month" type="number" placeholder="MM" min="1" max="12" value="6">
+          </div>
+          <div class="input-group">
+            <label class="field-label">Anno</label>
+            <input id="p1_year" type="number" placeholder="AAAA" min="1000" max="9999" value="1984">
+          </div>
+        </div>
+      </div>
+      <div class="person-block">
+        <h4>Persona 2</h4>
+        <div class="row">
+          <div class="input-group">
+            <label class="field-label">Giorno</label>
+            <input id="p2_day" type="number" placeholder="GG" min="1" max="31" value="15">
+          </div>
+          <div class="input-group">
+            <label class="field-label">Mese</label>
+            <input id="p2_month" type="number" placeholder="MM" min="1" max="12" value="3">
+          </div>
+          <div class="input-group">
+            <label class="field-label">Anno</label>
+            <input id="p2_year" type="number" placeholder="AAAA" min="1000" max="9999" value="1990">
+          </div>
+        </div>
+      </div>
+    </div>
+    <button onclick="calcCompat()">Calcola Compatibilità</button>
+
+    <div id="compatResult" class="hidden" style="margin-top:16px;">
+      <div class="compatRow" id="compatCards"></div>
+      <div id="compatSummaryBox" class="resultBox" style="margin-top:16px;"></div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════
+       SEZIONE 3 — CICLO PERSONALE DELL'ANNO
+  ══════════════════════════════════════════ -->
+  <div class="section">
+    <div class="section-title">🌀 Ciclo Personale dell'Anno</div>
+    <div class="section-desc">L'energia dominante per te in un anno solare specifico — risponde alla domanda: <em>"Cosa mi chiede questo anno?"</em></div>
+
+    <div class="row">
+      <div class="input-group">
+        <label class="field-label">Giorno</label>
+        <input id="c_day" type="number" placeholder="GG" min="1" max="31" value="10">
+      </div>
+      <div class="input-group">
+        <label class="field-label">Mese</label>
+        <input id="c_month" type="number" placeholder="MM" min="1" max="12" value="6">
+      </div>
+      <div class="input-group">
+        <label class="field-label">Anno da leggere</label>
+        <input id="c_solar" type="number" placeholder="AAAA" min="2000" max="2100" value="2026">
+      </div>
+      <button onclick="calcCiclo()">Calcola Ciclo</button>
+    </div>
+
+    <div id="cicloResult" class="hidden">
+      <div class="cards">
+        <div class="box">
+          <h3>Anno <span id="cicloAnno">-</span></h3>
+          <div id="cicloNum" class="big">-</div>
+          <div id="cicloName" class="note"></div>
+        </div>
+        <div class="box">
+          <h3>Anno <span id="cicloAnnoNext">-</span></h3>
+          <div id="cicloNumNext" class="big">-</div>
+          <div id="cicloNameNext" class="note"></div>
+        </div>
+      </div>
+      <div id="cicloBox" class="resultBox"></div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+/* ── UTILS ── */
+function reduceTo22(n) {
+  n = Math.abs(Math.floor(Number(n) || 0));
+  if (n === 0) return 0;
+  while (n > 22) {
+    let s = 0;
+    String(n).split('').forEach(ch => s += Number(ch));
+    n = s;
+  }
+  return n;
+}
+
+function computeLetters(day, month, year) {
+  const A = reduceTo22(day);
+  const B = reduceTo22(month);
+  const C = reduceTo22(year);
+  const D = reduceTo22(A + B + C);
+  const E = reduceTo22(A + B + C + D);
+  const F = reduceTo22(A + B);
+  const G = reduceTo22(B + C);
+  const H = reduceTo22(C + D);
+  const I = reduceTo22(D + A);
+  return {A,B,C,D,E,F,G,H,I};
+}
+
+/* ── ARCANA MAP ── */
+const arcanaMap = {
+   0: {name:"0 – Il Matto",            summary:"Inizio puro, potenziale infinito e libertà dagli schemi. Invito a fidarsi dell'ignoto e a procedere con innocenza."},
+   1: {name:"I – Il Mago",             summary:"Capacità di manifestare i tuoi desideri. Hai tutti gli strumenti necessari per creare la tua realtà: agisci ora."},
+   2: {name:"II – La Sacerdotessa",    summary:"Tempo di ascolto, intuizione e segreti. Non forzare l'azione; osserva ciò che è celato dietro le apparenze."},
+   3: {name:"III – L'Imperatrice",     summary:"Energia di abbondanza, creatività e nutrimento. Un periodo fertile per progetti che richiedono amorevole cura."},
+   4: {name:"IV – L'Imperatore",       summary:"Stabilità, potere e organizzazione. È il momento di costruire solide basi e agire con disciplina e logica."},
+   5: {name:"V – Il Papa",             summary:"Guida spirituale, istruzione e rispetto per le tradizioni. Cerca la saggezza attraverso lo studio o un mentore."},
+   6: {name:"VI – Gli Amanti",         summary:"Scelte del cuore, armonia e relazioni. Rifletti sui tuoi valori prima di prendere una decisione importante."},
+   7: {name:"VII – Il Carro",          summary:"Vittoria attraverso il controllo e la direzione. Mantieni la rotta con determinazione per superare ogni ostacolo."},
+   8: {name:"VIII – La Forza",         summary:"Dominio delle passioni istintive attraverso la dolcezza e il coraggio interiore. Sei più forte di quanto credi."},
+   9: {name:"IX – L'Eremita",          summary:"Riflessione solitaria, verità interiore e pazienza. Allontanati dal rumore esterno per trovare la tua luce guida."},
+  10: {name:"X – La Ruota",            summary:"Svolte del destino e cicli che cambiano. Accetta il movimento: ciò che scende risalirà, resta al centro del tuo asse."},
+  11: {name:"XI – La Giustizia",       summary:"Verità, equità e cause-effetti. Un tempo di equilibrio in cui raccogli esattamente ciò che hai seminato con coscienza."},
+  12: {name:"XII – L'Appeso",          summary:"Vedere le cose da una nuova prospettiva. Il sacrificio apparente o l'attesa producono una profonda illuminazione."},
+  13: {name:"XIII – La Morte",         summary:"Fine di un ciclo e trasformazione necessaria. Lascia andare ciò che è morto per permettere alla nuova vita di emergere."},
+  14: {name:"XIV – La Temperanza",     summary:"Moderazione, guarigione e flusso. Integra le polarità opposte con pazienza per trovare la pace interiore."},
+  15: {name:"XV – Il Diavolo",         summary:"Confronto con le proprie ombre, desideri e legami materiali. Sii consapevole di ciò che ti tiene incatenato."},
+  16: {name:"XVI – La Torre",          summary:"Rottura improvvisa di certezze fittizie. Un crollo necessario che libera lo spazio per costruire sulla verità."},
+  17: {name:"XVII – Le Stelle",        summary:"Speranza ritrovata, ispirazione e protezione. Segui i tuoi sogni con fiducia: l'universo ti sostiene."},
+  18: {name:"XVIII – La Luna",         summary:"Intuizioni potenti ma rischio di illusioni. Navega nel regno delle emozioni e dell'inconscio con prudenza."},
+  19: {name:"XIX – Il Sole",           summary:"Successo, vitalità e gioia radiosa. Tutto appare chiaro: goditi questo momento di successo e calore umano."},
+  20: {name:"XX – Il Giudizio",        summary:"Risveglio e bilanci profondi. È tempo di rispondere alla tua chiamata interiore e rinascere a nuova vita."},
+  21: {name:"XXI – Il Mondo",          summary:"Realizzazione totale e completamento di un grande obiettivo. Sei in armonia con l'universo, tutto è compiuto."},
+  22: {name:"XXII – Il Matto Iniziatico", summary:"Libertà assoluta e fine del viaggio che diventa un nuovo inizio. Fiducia cieca nel flusso cosmico del destino."}
+};
+
+const arcanaPoetic = {
+   0: {intro:"Sei venuto al mondo con il segno del Matto: un'anima che non conosce confini tracciati da altri.", body:"Dentro di te vive un potenziale che non si lascia imbrigliare. La tua forza non è nella certezza, ma nella capacità di ricominciare ogni volta come se fosse la prima.", seeds:["Fidati del passo che non sai ancora spiegare.","Lascia che l'ignoto sia il tuo territorio naturale.","Ogni inizio è già un compimento."]},
+   1: {intro:"Il Mago è la tua firma nell'universo: sei qui per trasformare l'intenzione in realtà.", body:"Possiedi tutti gli strumenti — mente, cuore, parola, azione. Il tuo scopo si realizza quando smetti di aspettare il momento giusto e inizi a creare con ciò che hai adesso.", seeds:["Nomina ciò che vuoi creare: le parole sono già magia.","Agisci prima che la mente trovi mille ragioni per aspettare.","La tua presenza è già trasformazione."]},
+   2: {intro:"La Sacerdotessa custodisce i tuoi segreti più profondi: sei un essere di soglia.", body:"Vivi tra ciò che si vede e ciò che si sente. La tua saggezza non viene dai libri ma da quella voce silenziosa che parla quando tutto tace.", seeds:["Impara a stare nel non-sapere senza ansia.","La risposta che cerchi è già in te, aspetta solo silenzio.","Fidati di ciò che percepisci prima ancora di capirlo."]},
+   3: {intro:"L'Imperatrice scorre nel tuo sangue: sei portatore di vita, bellezza e abbondanza.", body:"Hai il dono di far crescere ciò che tocchi — idee, relazioni, progetti. Il tuo scopo fiorisce quando ti permetti di nutrire e di essere nutrito.", seeds:["Crea qualcosa ogni giorno, anche di piccolo.","Prenditi cura di ciò che ami: è lì che nasce il tuo potere.","L'abbondanza inizia quando smetti di razionare te stesso."]},
+   4: {intro:"L'Imperatore è la tua colonna vertebrale: sei nato per costruire e per reggere.", body:"La tua anima cerca struttura non come prigione, ma come fondamenta da cui elevarsi. Quando organizzi, quando stabilisci confini chiari — è lì che il tuo destino prende forma concreta.", seeds:["Costruisci un sistema che sostenga il tuo sogno.","I confini che poni sono atti d'amore verso te stesso.","La disciplina è la forma più alta di libertà."]},
+   5: {intro:"Il Papa cammina con te: sei un cercatore di senso e un trasmettitore di saggezza.", body:"Il tuo scopo ha radici profonde nella tradizione e nella conoscenza. Sei qui per imparare e per insegnare, per trovare il filo che collega il visibile all'invisibile.", seeds:["Cerca un maestro — o diventa il maestro che avresti voluto avere.","Studia ciò che ti accende: è la tua mappa.","La saggezza si trasmette vivendo, non solo parlando."]},
+   6: {intro:"Gli Amanti sono il tuo arcano: sei qui per scegliere con tutto il cuore.", body:"Il tuo cammino è costellato di bivi profondi. Ogni scelta che fai con autenticità ti avvicina al tuo destino; ogni scelta fatta per paura ti allontana.", seeds:["Scegli ciò che ti fa sentire intero, non ciò che ti fa sentire sicuro.","Le relazioni autentiche sono specchi del tuo scopo.","Ogni bivio è un invito a conoscerti più a fondo."]},
+   7: {intro:"Il Carro è la tua energia: sei un guerriero del destino in marcia.", body:"Hai una forza di volontà che può spostare montagne. Il tuo scopo si compie quando impari a guidare le tue energie opposte verso un'unica direzione.", seeds:["Identifica la tua direzione e non lasciare che nulla ti distragga.","La disciplina non è rigidità: è fedeltà a te stesso.","Ogni ostacolo è un test della tua rotta, non una negazione."]},
+   8: {intro:"La Forza è il tuo dono nascosto: non la forza che urla, ma quella che sussurra.", body:"Sei qui per dimostrare che il coraggio più grande è la dolcezza. La tua anima sa come domare le bestie interiori non con la violenza ma con la presenza.", seeds:["Affronta ciò che temi con curiosità invece che con resistenza.","La tua vulnerabilità è la tua forza più autentica.","Sii gentile con te stesso: è da lì che nasce tutto il resto."]},
+   9: {intro:"L'Eremita illumina il tuo cammino: sei un cercatore di verità solitario e luminoso.", body:"Il tuo scopo non si trova nel rumore del mondo, ma in quei momenti di quiete in cui senti chiaramente chi sei.", seeds:["Crea spazi di silenzio nella tua settimana: sono il tuo nutrimento.","La solitudine non è isolamento: è il luogo dove ti ritrovi.","Ciò che hai scoperto nel buio è il dono che il mondo aspetta."]},
+  10: {intro:"La Ruota del Destino gira con te: sei un essere di cicli e trasformazioni.", body:"La tua vita non è lineare — è una spirale. Ogni caduta porta in sé il seme della risalita; ogni fine è già un nuovo inizio travestito.", seeds:["Osserva i cicli della tua vita: cosa si ripete? Cosa vuole cambiare?","Resta al centro della ruota: lì c'è la pace che non dipende dalle circostanze.","Ogni svolta del destino ti porta più vicino a chi sei davvero."]},
+  11: {intro:"La Giustizia è il tuo codice interiore: sei qui per vivere in verità.", body:"La tua anima ha un senso innato dell'equilibrio. Senti quando qualcosa è fuori posto — in te, nelle relazioni, nel mondo.", seeds:["Agisci sempre come se il tuo gesto fosse visibile all'universo.","Raddrizza ciò che senti storto: è la tua chiamata.","L'equilibrio non è immobilità: è un aggiustamento continuo e consapevole."]},
+  12: {intro:"L'Appeso ti guarda dal suo ramo: sei un'anima che vede il mondo al contrario degli altri.", body:"Il tuo dono è la prospettiva insolita. Le tue pause, le tue attese, i tuoi momenti di sospensione non sono perdite di tempo: sono illuminazioni in gestazione.", seeds:["Smetti di forzare: ciò che non si muove ha bisogno di maturare.","Capovolgi il problema: la soluzione è spesso nell'angolo che non hai ancora guardato.","L'attesa consapevole è una forma di azione profonda."]},
+  13: {intro:"La Morte cammina al tuo fianco come alleata: sei un maestro di trasformazioni.", body:"Non temere i finali: sono la tua specialità. Ogni volta che qualcosa muore nella tua vita stai facendo spazio a qualcosa di più vero.", seeds:["Identifica cosa è già morto ma stai ancora tenendo in vita per paura.","Ogni fine che accetti con dignità è un atto di potere.","Ciò che emerge dopo ogni morte è sempre più autentico di prima."]},
+  14: {intro:"La Temperanza scorre nelle tue vene: sei un alchimista dell'anima.", body:"Il tuo scopo si trova nell'arte di mescolare — opposti, contraddizioni, polarità. Non sei fatto per gli estremi: sei fatto per trovare la terza via.", seeds:["Cerca il punto di incontro tra ciò che ami e ciò che temi.","La pazienza non è passività: è fiducia nel processo.","Ogni integrazione che compi in te si riflette nel mondo attorno a te."]},
+  15: {intro:"Il Diavolo ti tende uno specchio: sei qui per liberarti e per liberare.", body:"Le tue catene non sono fuori di te — sono dentro. Ma la cosa straordinaria è che le hai messe tu, e tu puoi toglierle.", seeds:["Guarda in faccia ciò che ti tiene fermo: la consapevolezza è già metà della libertà.","Distingui i desideri che ti espandono da quelli che ti contraggono.","Ogni ombra che integri diventa una fonte di potere autentico."]},
+  16: {intro:"La Torre è la tua iniziazione: sei nato per costruire su fondamenta vere.", body:"Nella tua vita ci sono stati — o ci saranno — crolli improvvisi. Non sono punizioni: sono liberazioni. Ciò che cade era già falso.", seeds:["Quando qualcosa crolla, chiedi: cosa di vero rimane?","La verità che libera è sempre più preziosa della certezza che imprigiona.","Ricostruisci lentamente, su ciò che non può essere distrutto."]},
+  17: {intro:"Le Stelle brillano per te: sei un portatore di speranza nel buio degli altri.", body:"Anche nei momenti più bui, qualcosa in te sa che la luce tornerà. Questa fede vissuta è il tuo dono più grande.", seeds:["Coltiva la fiducia come si coltiva un giardino: ogni giorno, con cura.","I tuoi sogni non sono fughe dalla realtà: sono mappe del futuro.","Sii la stella che qualcuno sta cercando nel cielo."]},
+  18: {intro:"La Luna illumina il tuo cammino con luce riflessa: sei un navigatore dell'inconscio.", body:"Vivi in un mondo più ricco di quello che gli altri vedono. Le tue emozioni, i tuoi sogni, le tue intuizioni sono dati reali — non distrazioni.", seeds:["Tieni un diario dei sogni: il tuo inconscio ti sta parlando.","Distingui l'intuizione dalla paura: la prima espande, la seconda contrae.","Ciò che emerge dall'ombra, se accolto, diventa il tuo più grande alleato."]},
+  19: {intro:"Il Sole splende attraverso di te: sei qui per brillare senza scuse.", body:"La tua energia è contagiosa quando sei autentico. Il tuo scopo si compie quando smetti di nasconderti e la tua luce diventa un invito per gli altri.", seeds:["Esprimi ciò che ti rende felice senza giustificazioni.","La tua gioia è un servizio al mondo, non un lusso.","Celebra ogni traguardo: il riconoscimento di sé è il primo passo verso la grandezza."]},
+  20: {intro:"Il Giudizio risuona nella tua anima: sei qui per rispondere a una chiamata più grande.", body:"C'è qualcosa che ti chiama — una voce che senti nei momenti di silenzio, un senso di missione che non riesci a ignorare del tutto.", seeds:["Ascolta la chiamata che hai rimandato: è ancora lì, paziente.","Fai il bilancio di ciò che hai vissuto: ogni esperienza era preparazione.","Rinascere non significa dimenticare: significa integrare e andare oltre."]},
+  21: {intro:"Il Mondo danza con te: sei un'anima che ha già tutto ciò di cui ha bisogno.", body:"Il tuo scopo non è da qualche parte nel futuro — è già qui, in questo momento, in questa vita.", seeds:["Riconosci ciò che hai già realizzato: è più di quanto pensi.","La gratitudine per il presente è il portale verso il prossimo ciclo.","Condividi la tua pienezza: è il dono più grande che puoi offrire."]},
+  22: {intro:"Il Matto Iniziatico chiude il cerchio e lo riapre: sei un eterno viaggiatore dell'anima.", body:"Hai percorso l'intero viaggio degli arcani e ora sei di nuovo all'inizio — ma con tutta la saggezza accumulata.", seeds:["Integra ciò che hai imparato e poi lascialo andare.","Il prossimo passo non ha bisogno di essere spiegato: ha bisogno di essere vissuto.","La libertà vera nasce quando smetti di cercare la sicurezza e inizi a cercare la verità."]}
+};
+
+function getArc(n) { return arcanaMap[n] || {name:`Arcano ${n}`, summary:"Energia in fase di decodifica."}; }
+function getPoet(n) { return arcanaPoetic[n] || {intro:"Questa energia porta un messaggio unico.", body:"Osserva come si manifesta nelle tue scelte.", seeds:["Ascolta.","Agisci.","Fidati."]}; }
+
+/* ══════════════════════════════════════════
+   SEZIONE 1 — FULCRO
+══════════════════════════════════════════ */
+function calcFulcro() {
+  const d = Number(document.getElementById('f_day').value);
+  const m = Number(document.getElementById('f_month').value);
+  const y = Number(document.getElementById('f_year').value);
+  if (!(d>=1&&d<=31&&m>=1&&m<=12&&y>=1000&&y<=9999)) { alert('Inserisci una data valida.'); return; }
+
+  const L = computeLetters(d, m, y);
+  const E = L.E;
+  const arc = getArc(E);
+  const poet = getPoet(E);
+
+  document.getElementById('fulcroNum').innerText = E;
+  document.getElementById('fulcroName').innerText = arc.name;
+  document.getElementById('fulcroBox').innerHTML = `
+    <h4>${arc.name} — Il tuo Fulcro</h4>
+    <p style="color:#7c6fa0; margin-bottom:10px;">Questa è la tua zona di comfort naturale: l'energia a cui torni istintivamente, il tuo punto di equilibrio quando tutto si agita attorno a te. Non è né un limite né una prigione — è la tua base.</p>
+    <p><strong>${poet.intro}</strong></p>
+    <p style="margin-top:6px;">${poet.body}</p>
+    <ul>${poet.seeds.map(s=>`<li>${s}</li>`).join('')}</ul>
+    <p class="seed">✦ Il tuo fulcro non è dove ti fermi — è da dove riparti.</p>
+  `;
+  document.getElementById('fulcroResult').classList.remove('hidden');
+}
+
+/* ══════════════════════════════════════════
+   SEZIONE 2 — COMPATIBILITÀ
+══════════════════════════════════════════ */
+function calcCompat() {
+  const d1=Number(document.getElementById('p1_day').value), m1=Number(document.getElementById('p1_month').value), y1=Number(document.getElementById('p1_year').value);
+  const d2=Number(document.getElementById('p2_day').value), m2=Number(document.getElementById('p2_month').value), y2=Number(document.getElementById('p2_year').value);
+  if (!(d1>=1&&d1<=31&&m1>=1&&m1<=12&&y1>=1000&&y1<=9999&&d2>=1&&d2<=31&&m2>=1&&m2<=12&&y2>=1000&&y2<=9999)) { alert('Inserisci date valide per entrambe le persone.'); return; }
+
+  const L1 = computeLetters(d1,m1,y1);
+  const L2 = computeLetters(d2,m2,y2);
+
+  const piani = [
+    {label:"Piano Personale",    desc:"Come si incontrano le vostre energie individuali (A+A)",  val: reduceTo22(L1.A + L2.A)},
+    {label:"Piano Emotivo",      desc:"Come si incontrano le vostre energie emotive (B+B)",       val: reduceTo22(L1.B + L2.B)},
+    {label:"Piano Materiale",    desc:"Come si incontrano le vostre energie materiali (C+C)",     val: reduceTo22(L1.C + L2.C)},
+    {label:"Piano Spirituale",   desc:"Come si incontrano le vostre energie spirituali (D+D)",    val: reduceTo22(L1.D + L2.D)},
+    {label:"Sintesi della Coppia",desc:"L'energia complessiva della connessione tra voi",         val: reduceTo22(L1.E + L2.E)},
+  ];
+
+  const cards = document.getElementById('compatCards');
+  cards.innerHTML = '';
+  piani.forEach(p => {
+    const arc = getArc(p.val);
+    cards.innerHTML += `
+      <div class="compatCol">
+        <h5>${p.label}</h5>
+        <div class="num">${p.val}</div>
+        <div class="arcname">${arc.name}</div>
+        <div class="arcdesc">${p.desc}</div>
+        <div class="arcdesc" style="margin-top:6px; color:#5b2fa6;">${arc.summary}</div>
+      </div>`;
+  });
+
+  const sintesi = piani[4].val;
+  const poet = getPoet(sintesi);
+  document.getElementById('compatSummaryBox').innerHTML = `
+    <h4>✦ Lettura della Connessione — ${getArc(sintesi).name}</h4>
+    <p style="color:#7c6fa0; margin-bottom:10px;">Questa è l'energia che nasce dall'incontro tra voi due — non appartiene né all'uno né all'altro, ma emerge dallo spazio che create insieme.</p>
+    <p><strong>${poet.intro}</strong></p>
+    <p style="margin-top:6px;">${poet.body}</p>
+    <ul>${poet.seeds.map(s=>`<li>${s}</li>`).join('')}</ul>
+    <p class="seed">✦ Ogni relazione è un terzo essere — curatelo come tale.</p>
+  `;
+  document.getElementById('compatResult').classList.remove('hidden');
+}
+
+/* ── NUMEROLOGIA PURA — mappa 1-9 + maestri 11/22 ── */
+const numMap = {
+  1:  {name:"Anno 1 – L'Inizio",              keyword:"Semina · Indipendenza · Coraggio",      desc:"È l'anno zero di un nuovo ciclo di 9 anni. Hai l'energia per avviare ciò che desideri davvero. Non aspettare gli altri: prendi l'iniziativa, pianta i semi con intenzione."},
+  2:  {name:"Anno 2 – La Pazienza",            keyword:"Collaborazione · Attesa · Diplomazia",  desc:"Dopo l'impulso dell'anno 1, ora i semi germogliano nel silenzio. Le relazioni sono al centro: impara ad ascoltare, a collaborare, a fidarti del processo senza forzarlo."},
+  3:  {name:"Anno 3 – L'Espansione",           keyword:"Creatività · Espressione · Gioia",      desc:"Il ciclo inizia a dare i primi frutti visibili. Un anno dinamico e fortunato: esprimiti, comunica, goditi la crescita. È il momento di far sbocciare le tue idee nel mondo."},
+  4:  {name:"Anno 4 – La Costruzione",         keyword:"Lavoro · Disciplina · Fondamenta",      desc:"Anno di impegno pratico e concreto. Costruisci le fondamenta di ciò che vuoi rendere duraturo. È faticoso, ma ogni mattone posato ora reggerà il tuo futuro."},
+  5:  {name:"Anno 5 – Il Cambiamento",         keyword:"Libertà · Movimento · Svolta",          desc:"L'energia accelera nel mezzo del ciclo. Viaggi, cambiamenti, nuove esperienze. Rompi la routine e abbraccia l'imprevisto: la vita ti chiede di muoverti."},
+  6:  {name:"Anno 6 – L'Armonia",              keyword:"Responsabilità · Famiglia · Amore",     desc:"Il focus è sulla casa e sul cuore. È tempo di prendersi cura degli altri e di sanare i conflitti. Anno di bellezza, dovere e relazioni profonde."},
+  7:  {name:"Anno 7 – L'Introspezione",        keyword:"Studio · Spiritualità · Verità",        desc:"Fermati. Non è un anno per l'espansione materiale, ma per la saggezza interiore. Analizza chi sei diventato, studia, medita. Le risposte arrivano nel silenzio."},
+  8:  {name:"Anno 8 – La Raccolta",            keyword:"Realizzazione · Potere · Giustizia",    desc:"Momento di grande forza e successo materiale. Se hai lavorato bene nei cicli precedenti, ora raccogli i frutti. È l'anno del ritorno energetico: ricevi ciò che hai seminato."},
+  9:  {name:"Anno 9 – Il Compimento",          keyword:"Fine ciclo · Lasciar andare · Rinascita", desc:"Si chiude il cerchio di 9 anni. Elimina ciò che non serve più, fai spazio. Finisce qualcosa — ma finisce per rinascere. Preparati: il prossimo anno ricomincia tutto."},
+  11: {name:"Numero Maestro 11 – L'Illuminazione", keyword:"Visione · Intuizione · Canale",     desc:"Anno ad altissima vibrazione spirituale. Sei un canale per qualcosa di più grande. Grandi intuizioni, consapevolezza elevata, ma anche sensibilità intensa. Ascolta la voce interiore."},
+  22: {name:"Numero Maestro 22 – Il Grande Costruttore", keyword:"Visione pratica · Eredità · Grandezza", desc:"L'energia del 4 elevata all'ennesima potenza. Puoi costruire qualcosa che durerà nel tempo, qualcosa di grande. Anno di realizzazioni straordinarie se agisci con disciplina e visione."}
+};
+
+function reduceNumerology(n) {
+  let num = Math.abs(Math.floor(Number(n) || 0));
+  if (num === 0) return 0;
+  function sumDigits(v) { return String(v).split('').reduce((a,c) => a + Number(c), 0); }
+  while (num > 9 && num !== 11 && num !== 22) { num = sumDigits(num); }
+  return num;
+}
+
+/* ══════════════════════════════════════════
+   SEZIONE 3 — CICLO PERSONALE DELL'ANNO
+══════════════════════════════════════════ */
+function calcCiclo() {
+  const d = Number(document.getElementById('c_day').value);
+  const m = Number(document.getElementById('c_month').value);
+  const solar = Number(document.getElementById('c_solar').value);
+  if (!(d>=1&&d<=31&&m>=1&&m<=12&&solar>=2000&&solar<=2100)) { alert('Inserisci dati validi.'); return; }
+
+  const cicloAttuale  = reduceNumerology(d + m + solar);
+  const cicloProssimo = reduceNumerology(d + m + (solar + 1));
+
+  const nA = numMap[cicloAttuale]  || {name:`Anno ${cicloAttuale}`,  keyword:"", desc:""};
+  const nN = numMap[cicloProssimo] || {name:`Anno ${cicloProssimo}`, keyword:"", desc:""};
+
+  document.getElementById('cicloAnno').innerText     = solar;
+  document.getElementById('cicloNum').innerText      = cicloAttuale;
+  document.getElementById('cicloName').innerText     = nA.name;
+  document.getElementById('cicloAnnoNext').innerText = solar + 1;
+  document.getElementById('cicloNumNext').innerText  = cicloProssimo;
+  document.getElementById('cicloNameNext').innerText = nN.name;
+
+  document.getElementById('cicloBox').innerHTML = `
+    <h4>✦ Il tuo Anno ${solar} — Numerologia Pura</h4>
+    <p style="color:#5b2fa6; font-weight:700; font-size:16px; margin-bottom:4px;">${nA.name}</p>
+    <p style="color:#7c6fa0; font-size:13px; margin-bottom:12px;">${nA.keyword}</p>
+    <p style="line-height:1.7;">${nA.desc}</p>
+    <div style="margin-top:18px; padding-top:14px; border-top:1px dashed #ddd;">
+      <p style="font-size:13px; color:#7c6fa0; line-height:1.6;">
+        <strong>Verso il ${solar+1} — ${nN.name}</strong><br>
+        ${nN.desc}
+      </p>
+    </div>
+  `;
+  document.getElementById('cicloResult').classList.remove('hidden');
+}
+</script>
+</body>
+</html>
