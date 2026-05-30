@@ -1,3 +1,4 @@
+si ma adesso la modifica del fulcro non ce cioè... appare come un qualsiasi altro testo non è piu visivamente piu imporante... ti scrivo il codice cosi fai la modifica con il testo aggiornato:
 <!doctype html>
 <html lang="it">
 <head>
@@ -408,6 +409,7 @@ function renderLettura(day, month, year, letters, ages, personale, sociale, spir
   document.getElementById('readingCicloWrap').innerHTML = buildCicloHTML(day, month);
 
   document.getElementById('lettura').style.display = 'block';
+  document.getElementById('promoLibro').style.display = 'block';
 }
 
 /* ── CALCOLA ── */
@@ -458,7 +460,7 @@ function calcola() {
   </div>
   </div>
   <!-- SEZIONE PROMO LIBRO "IL CODICE DELL'ALCHIMISTA" -->
-<div style="margin-top: 40px; max-width:1100px; width:98vw; padding: 30px; background: linear-gradient(135deg, #5b2fa6 0%, #3a1c6a 100%); border-radius: 16px; color: #fff; box-shadow: 0 10px 25px rgba(91, 47, 166, 0.2); text-align: center; box-sizing:border-box;">
+<div id="promoLibro" style="display:none; margin-top: 40px; max-width:1100px; width:98vw; padding: 30px; background: linear-gradient(135deg, #5b2fa6 0%, #3a1c6a 100%); border-radius: 16px; color: #fff; box-shadow: 0 10px 25px rgba(91, 47, 166, 0.2); text-align: center; box-sizing:border-box;">
   <h3 style="margin: 0 0 15px; font-size: 22px; color: #fff; font-weight: 700;">✨ Niente è Casuale: Oltre la Matrice</h3>
   <p style="font-size: 16px; line-height: 1.8; margin-bottom: 20px; color: #e9d5ff;">
     La Matrice che hai appena calcolato rivela il tuo <b>mandato energetico</b>, ma conoscere il proprio destino è solo il primo passo. Il vero potere non sta nel subire i cicli, ma nel riconoscerli per trasmutarli.
@@ -479,6 +481,3 @@ function calcola() {
 </div>
 </body>
 </html>
-
-
-fai tu mi fido di te
