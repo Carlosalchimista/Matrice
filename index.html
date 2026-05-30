@@ -48,14 +48,16 @@
 <body>
 <div class="card">
   <h1>Matrice del Destino — Calcolatore</h1>
-<!-- PULSANTE PER ANDARE ALLA SECONDA PAGINA -->
+
+<!-- PULSANTE PER ANDARE ALLA SECONDA PAGINA (RELazioni) -->
 <div style="margin-bottom: 24px;">
   <a href="approfondimenti.html" style="text-decoration:none;">
     <button type="button" style="background:#efe6fb; color:#5b2fa6; border:1px solid #dcd0f0; width:auto; padding:10px 20px;">
-      ✨ Voglio saperne di più (Fulcro, Coppia, Ciclo Anno) →
+      💞 Approfondimenti Relazioni (Compatibilità) →
     </button>
   </a>
 </div>
+
   <!-- INTRODUZIONE ALLA MATRICE DEL DESTINO -->
 <div style="background:#f8f5ff; border-left:5px solid #5b2fa6; border-radius:12px; padding:20px 24px; margin-bottom:28px; color:#4a5568; font-size:14.5px; line-height:1.8;">
   <p style="margin:0 0 10px; font-size:16px; font-weight:700; color:#5b2fa6;">🔮 Cos'è la Matrice del Destino?</p>
@@ -63,6 +65,7 @@
   <p style="margin:0 0 10px;">Dalla tua data di nascita vengono estratti dei numeri — ognuno corrisponde a un Arcano — che descrivono la tua <strong>missione personale</strong>, il tuo <strong>ruolo sociale</strong>, il tuo <strong>percorso spirituale</strong> e l'energia che stai attraversando in ogni fase della vita.</p>
   <p style="margin:0;">Inserisci la tua data di nascita qui sotto per scoprire la tua mappa. 👇</p>
 </div>
+
   <div class="row">
     <input id="day" type="number" placeholder="Giorno (GG)" min="1" max="31">
     <input id="month" type="number" placeholder="Mese (MM)" min="1" max="12">
@@ -132,9 +135,15 @@
         </div>
       </div>
 
+      <!-- NUOVO: FULCRO / ZONA DI COMFORT -->
+      <div id="readingFulcroWrap" class="scopoLettura"></div>
+
       <div id="readingPersonalWrap" class="scopoLettura"></div>
       <div id="readingSocialWrap" class="scopoLettura"></div>
       <div id="readingSpiritualWrap" class="scopoLettura"></div>
+
+      <!-- NUOVO: CICLO PERSONALE DELL'ANNO (attuale + prossimo) -->
+      <div id="readingCicloWrap" class="scopoLettura"></div>
     </div>
 
   </div>
@@ -190,7 +199,7 @@ function buildAgeSeries_det(letters) {
   return ages;
 }
 
-/* ── ARCANA MAP (originale — summary lungo, usato dallo slider) ── */
+/* ── ARCANA MAP (usato dallo slider e dalle etichette) ── */
 const arcanaMap = {
    0: {name: "0 – Il Matto",            summary: "Inizio puro, potenziale infinito e libertà dagli schemi. Invito a fidarsi dell'ignoto e a procedere con innocenza."},
    1: {name: "I – Il Mago",             summary: "Capacità di manifestare i tuoi desideri. Hai tutti gli strumenti necessari per creare la tua realtà: agisci ora."},
@@ -217,32 +226,52 @@ const arcanaMap = {
   22: {name: "XXII – Il Matto Iniziatico", summary: "Libertà assoluta e fine del viaggio che diventa un nuovo inizio. Fiducia cieca nel flusso cosmico del destino."}
 };
 
-/* ── LETTURA POETICA (separata dall'arcanaMap, non tocca lo slider) ── */
+/* ── LETTURA POETICA (scopi + ora anche fulcro) ── */
 const arcanaPoetic = {
-   0: {intro: "Sei venuto al mondo con il segno del Matto: un'anima che non conosce confini tracciati da altri.", body: "Dentro di te vive un potenziale che non si lascia imbrigliare. La tua forza non è nella certezza, ma nella capacità di ricominciare ogni volta come se fosse la prima. Hai una libertà rara: quella di non dover dimostrare nulla a nessuno.", seeds: ["Fidati del passo che non sai ancora spiegare.", "Lascia che l'ignoto sia il tuo territorio naturale.", "Ogni inizio è già un compimento."]},
-   1: {intro: "Il Mago è la tua firma nell'universo: sei qui per trasformare l'intenzione in realtà.", body: "Possiedi tutti gli strumenti — mente, cuore, parola, azione. Il tuo scopo si realizza quando smetti di aspettare il momento giusto e inizi a creare con ciò che hai adesso. La tua volontà è una forza che il mondo aspetta.", seeds: ["Nomina ciò che vuoi creare: le parole sono già magia.", "Agisci prima che la mente trovi mille ragioni per aspettare.", "La tua presenza è già trasformazione."]},
-   2: {intro: "La Sacerdotessa custodisce i tuoi segreti più profondi: sei un essere di soglia.", body: "Vivi tra ciò che si vede e ciò che si sente. La tua saggezza non viene dai libri ma da quella voce silenziosa che parla quando tutto tace. Il tuo cammino richiede ascolto prima di ogni azione.", seeds: ["Impara a stare nel non-sapere senza ansia.", "La risposta che cerchi è già in te, aspetta solo silenzio.", "Fidati di ciò che percepisci prima ancora di capirlo."]},
-   3: {intro: "L'Imperatrice scorre nel tuo sangue: sei portatore di vita, bellezza e abbondanza.", body: "Hai il dono di far crescere ciò che tocchi — idee, relazioni, progetti. Il tuo scopo fiorisce quando ti permetti di nutrire e di essere nutrito, quando smetti di trattenerti e lasci che la tua creatività si riversi nel mondo.", seeds: ["Crea qualcosa ogni giorno, anche di piccolo.", "Prenditi cura di ciò che ami: è lì che nasce il tuo potere.", "L'abbondanza inizia quando smetti di razionare te stesso."]},
-   4: {intro: "L'Imperatore è la tua colonna vertebrale: sei nato per costruire e per reggere.", body: "La tua anima cerca struttura non come prigione, ma come fondamenta da cui elevarsi. Quando organizzi, quando stabilisci confini chiari, quando agisci con disciplina — è lì che il tuo destino prende forma concreta.", seeds: ["Costruisci un sistema che sostenga il tuo sogno.", "I confini che poni sono atti d'amore verso te stesso.", "La disciplina è la forma più alta di libertà."]},
-   5: {intro: "Il Papa cammina con te: sei un cercatore di senso e un trasmettitore di saggezza.", body: "Il tuo scopo ha radici profonde nella tradizione e nella conoscenza. Sei qui per imparare e per insegnare, per trovare il filo che collega il visibile all'invisibile. La tua guida interiore è più affidabile di qualsiasi autorità esterna.", seeds: ["Cerca un maestro — o diventa il maestro che avresti voluto avere.", "Studia ciò che ti accende: è la tua mappa.", "La saggezza si trasmette vivendo, non solo parlando."]},
-   6: {intro: "Gli Amanti sono il tuo arcano: sei qui per scegliere con tutto il cuore.", body: "Il tuo cammino è costellato di bivi profondi. Ogni scelta che fai con autenticità ti avvicina al tuo destino; ogni scelta fatta per paura ti allontana. L'amore — per te stesso, per gli altri, per ciò che fai — è la tua bussola.", seeds: ["Scegli ciò che ti fa sentire intero, non ciò che ti fa sentire sicuro.", "Le relazioni autentiche sono specchi del tuo scopo.", "Ogni bivio è un invito a conoscerti più a fondo."]},
-   7: {intro: "Il Carro è la tua energia: sei un guerriero del destino in marcia.", body: "Hai una forza di volontà che può spostare montagne. Il tuo scopo si compie quando impari a guidare le tue energie opposte — emozione e ragione, impulso e strategia — verso un'unica direzione. La vittoria è già scritta, se non ti fermi.", seeds: ["Identifica la tua direzione e non lasciare che nulla ti distragga.", "La disciplina non è rigidità: è fedeltà a te stesso.", "Ogni ostacolo è un test della tua rotta, non una negazione."]},
-   8: {intro: "La Forza è il tuo dono nascosto: non la forza che urla, ma quella che sussurra.", body: "Sei qui per dimostrare che il coraggio più grande è la dolcezza. La tua anima sa come domare le bestie interiori — paure, rabbie, ombre — non con la violenza ma con la presenza. Questa è la tua potenza più rara.", seeds: ["Affronta ciò che temi con curiosità invece che con resistenza.", "La tua vulnerabilità è la tua forza più autentica.", "Sii gentile con te stesso: è da lì che nasce tutto il resto."]},
-   9: {intro: "L'Eremita illumina il tuo cammino: sei un cercatore di verità solitario e luminoso.", body: "Il tuo scopo non si trova nel rumore del mondo, ma in quei momenti di quiete in cui senti chiaramente chi sei. Sei qui per trovare la tua luce interiore e poi — quando sei pronto — per mostrarla agli altri come faro.", seeds: ["Crea spazi di silenzio nella tua settimana: sono il tuo nutrimento.", "La solitudine non è isolamento: è il luogo dove ti ritrovi.", "Ciò che hai scoperto nel buio è il dono che il mondo aspetta."]},
-  10: {intro: "La Ruota del Destino gira con te: sei un essere di cicli e trasformazioni.", body: "La tua vita non è lineare — è una spirale. Ogni caduta porta in sé il seme della risalita; ogni fine è già un nuovo inizio travestito. Il tuo scopo si rivela quando smetti di resistere al movimento e impari a danzare con il cambiamento.", seeds: ["Osserva i cicli della tua vita: cosa si ripete? Cosa vuole cambiare?", "Resta al centro della ruota: lì c'è la pace che non dipende dalle circostanze.", "Ogni svolta del destino ti porta più vicino a chi sei davvero."]},
-  11: {intro: "La Giustizia è il tuo codice interiore: sei qui per vivere in verità.", body: "La tua anima ha un senso innato dell'equilibrio. Senti quando qualcosa è fuori posto — in te, nelle relazioni, nel mondo. Il tuo scopo si compie quando hai il coraggio di dire la verità, di fare scelte allineate e di raccogliere con grazia ciò che hai seminato.", seeds: ["Agisci sempre come se il tuo gesto fosse visibile all'universo.", "Raddrizza ciò che senti storto: è la tua chiamata.", "L'equilibrio non è immobilità: è un aggiustamento continuo e consapevole."]},
-  12: {intro: "L'Appeso ti guarda dal suo ramo: sei un'anima che vede il mondo al contrario degli altri.", body: "Il tuo dono è la prospettiva insolita. Dove gli altri vedono un ostacolo, tu puoi vedere un portale. Le tue pause, le tue attese, i tuoi momenti di sospensione non sono perdite di tempo: sono illuminazioni in gestazione.", seeds: ["Smetti di forzare: ciò che non si muove ha bisogno di maturare.", "Capovolgi il problema: la soluzione è spesso nell'angolo che non hai ancora guardato.", "L'attesa consapevole è una forma di azione profonda."]},
-  13: {intro: "La Morte cammina al tuo fianco come alleata: sei un maestro di trasformazioni.", body: "Non temere i finali: sono la tua specialità. Ogni volta che qualcosa muore nella tua vita — una relazione, un'identità, un sogno — stai facendo spazio a qualcosa di più vero. Il tuo scopo si compie nell'arte di lasciar andare con grazia.", seeds: ["Identifica cosa è già morto ma stai ancora tenendo in vita per paura.", "Ogni fine che accetti con dignità è un atto di potere.", "Ciò che emerge dopo ogni morte è sempre più autentico di prima."]},
-  14: {intro: "La Temperanza scorre nelle tue vene: sei un alchimista dell'anima.", body: "Il tuo scopo si trova nell'arte di mescolare — opposti, contraddizioni, polarità. Non sei fatto per gli estremi: sei fatto per trovare la terza via, quella che integra senza annullare. La tua guarigione e quella degli altri passa attraverso questa capacità rara.", seeds: ["Cerca il punto di incontro tra ciò che ami e ciò che temi.", "La pazienza non è passività: è fiducia nel processo.", "Ogni integrazione che compi in te si riflette nel mondo attorno a te."]},
-  15: {intro: "Il Diavolo ti tende uno specchio: sei qui per liberarti e per liberare.", body: "Le tue catene non sono fuori di te — sono dentro. Ma la cosa straordinaria è che le hai messe tu, e tu puoi toglierle. Il tuo scopo più profondo è la liberazione: da ciò che ti limita, da ciò che ti definisce per paura, da ciò che consumi invece di nutrirti.", seeds: ["Guarda in faccia ciò che ti tiene fermo: la consapevolezza è già metà della libertà.", "Distingui i desideri che ti espandono da quelli che ti contraggono.", "Ogni ombra che integri diventa una fonte di potere autentico."]},
-  16: {intro: "La Torre è la tua iniziazione: sei nato per costruire su fondamenta vere.", body: "Nella tua vita ci sono stati — o ci saranno — crolli improvvisi. Non sono punizioni: sono liberazioni. Ciò che cade era già falso. Il tuo scopo emerge proprio da quelle macerie, più chiaro e più solido di qualsiasi struttura che avevi costruito prima.", seeds: ["Quando qualcosa crolla, chiedi: cosa di vero rimane?", "La verità che libera è sempre più preziosa della certezza che imprigiona.", "Ricostruisci lentamente, su ciò che non può essere distrutto."]},
-  17: {intro: "Le Stelle brillano per te: sei un portatore di speranza nel buio degli altri.", body: "Anche nei momenti più bui, qualcosa in te sa che la luce tornerà. Questa fede — non cieca, ma vissuta — è il tuo dono più grande. Il tuo scopo si compie quando condividi quella speranza, quando la tua presenza ricorda agli altri che vale la pena continuare.", seeds: ["Coltiva la fiducia come si coltiva un giardino: ogni giorno, con cura.", "I tuoi sogni non sono fughe dalla realtà: sono mappe del futuro.", "Sii la stella che qualcuno sta cercando nel cielo."]},
-  18: {intro: "La Luna illumina il tuo cammino con luce riflessa: sei un navigatore dell'inconscio.", body: "Vivi in un mondo più ricco di quello che gli altri vedono. Le tue emozioni, i tuoi sogni, le tue intuizioni sono dati reali — non distrazioni. Il tuo scopo si compie quando impari a navigare queste acque profonde senza perderti, portando alla luce ciò che era nascosto.", seeds: ["Tieni un diario dei sogni: il tuo inconscio ti sta parlando.", "Distingui l'intuizione dalla paura: la prima espande, la seconda contrae.", "Ciò che emerge dall'ombra, se accolto, diventa il tuo più grande alleato."]},
-  19: {intro: "Il Sole splende attraverso di te: sei qui per brillare senza scuse.", body: "La tua energia è contagiosa quando sei autentico. Il tuo scopo si compie quando smetti di nasconderti, quando esprimi la tua gioia senza chiedere permesso, quando la tua luce diventa un invito per gli altri a fare lo stesso. Non c'è nulla da nascondere: sei fatto di luce.", seeds: ["Esprimi ciò che ti rende felice senza giustificazioni.", "La tua gioia è un servizio al mondo, non un lusso.", "Celebra ogni traguardo: il riconoscimento di sé è il primo passo verso la grandezza."]},
-  20: {intro: "Il Giudizio risuona nella tua anima: sei qui per rispondere a una chiamata più grande.", body: "C'è qualcosa che ti chiama — una voce che senti nei momenti di silenzio, un senso di missione che non riesci a ignorare del tutto. Il tuo scopo si compie quando smetti di rimandare quella risposta e inizi a vivere come se la tua vita avesse davvero un significato profondo.", seeds: ["Ascolta la chiamata che hai rimandato: è ancora lì, paziente.", "Fai il bilancio di ciò che hai vissuto: ogni esperienza era preparazione.", "Rinascere non significa dimenticare: significa integrare e andare oltre."]},
-  21: {intro: "Il Mondo danza con te: sei un'anima che ha già tutto ciò di cui ha bisogno.", body: "Il tuo scopo non è da qualche parte nel futuro — è già qui, in questo momento, in questa vita. Sei chiamato a riconoscere la completezza di ciò che sei, a celebrare il viaggio compiuto e a condividere quella pienezza con il mondo. Sei già arrivato.", seeds: ["Riconosci ciò che hai già realizzato: è più di quanto pensi.", "La gratitudine per il presente è il portale verso il prossimo ciclo.", "Condividi la tua pienezza: è il dono più grande che puoi offrire."]},
-  22: {intro: "Il Matto Iniziatico chiude il cerchio e lo riapre: sei un eterno viaggiatore dell'anima.", body: "Hai percorso l'intero viaggio degli arcani e ora sei di nuovo all'inizio — ma con tutta la saggezza accumulata. Il tuo scopo è il salto consapevole: non la fuga, ma la fiducia totale nel flusso cosmico. Sei libero in un modo che pochi comprendono.", seeds: ["Integra ciò che hai imparato e poi lascialo andare.", "Il prossimo passo non ha bisogno di essere spiegato: ha bisogno di essere vissuto.", "La libertà vera nasce quando smetti di cercare la sicurezza e inizi a cercare la verità."]}
+  0:{intro:"Sei venuto al mondo con il segno del Matto: un'anima che non conosce confini tracciati da altri.",body:"Dentro di te vive un potenziale che non si lascia imbrigliare. La tua forza non è nella certezza, ma nella capacità di ricominciare ogni volta come se fosse la prima. Hai una libertà rara: quella di non dover dimostrare nulla a nessuno.",seeds:["Fidati del passo che non sai ancora spiegare.","Lascia che l'ignoto sia il tuo territorio naturale.","Ogni inizio è già un compimento."]},
+  1:{intro:"Il Mago è la tua firma nell'universo: sei qui per trasformare l'intenzione in realtà.",body:"Possiedi tutti gli strumenti — mente, cuore, parola, azione. Il tuo scopo si realizza quando smetti di aspettare il momento giusto e inizi a creare con ciò che hai adesso. La tua volontà è una forza che il mondo aspetta.",seeds:["Nomina ciò che vuoi creare: le parole sono già magia.","Agisci prima che la mente trovi mille ragioni per aspettare.","La tua presenza è già trasformazione."]},
+  2:{intro:"La Sacerdotessa custodisce i tuoi segreti più profondi: sei un essere di soglia.",body:"Vivi tra ciò che si vede e ciò che si sente. La tua saggezza non viene dai libri ma da quella voce silenziosa che parla quando tutto tace. Il tuo cammino richiede ascolto prima di ogni azione.",seeds:["Impara a stare nel non-sapere senza ansia.","La risposta che cerchi è già in te, aspetta solo silenzio.","Fidati di ciò che percepisci prima ancora di capirlo."]},
+  3:{intro:"L'Imperatrice scorre nel tuo sangue: sei portatore di vita, bellezza e abbondanza.",body:"Hai il dono di far crescere ciò che tocchi — idee, relazioni, progetti. Il tuo scopo fiorisce quando ti permetti di nutrire e di essere nutrito, quando smetti di trattenerti e lasci che la tua creatività si riversi nel mondo.",seeds:["Crea qualcosa ogni giorno, anche di piccolo.","Prenditi cura di ciò che ami: è lì che nasce il tuo potere.","L'abbondanza inizia quando smetti di razionare te stesso."]},
+  4:{intro:"L'Imperatore è la tua colonna vertebrale: sei nato per costruire e per reggere.",body:"La tua anima cerca struttura non come prigione, ma come fondamenta da cui elevarsi. Quando organizzi, quando stabilisci confini chiari, quando agisci con disciplina — è lì che il tuo destino prende forma concreta.",seeds:["Costruisci un sistema che sostenga il tuo sogno.","I confini che poni sono atti d'amore verso te stesso.","La disciplina è la forma più alta di libertà."]},
+  5:{intro:"Il Papa cammina con te: sei un cercatore di senso e un trasmettitore di saggezza.",body:"Il tuo scopo ha radici profonde nella tradizione e nella conoscenza. Sei qui per imparare e per insegnare, per trovare il filo che collega il visibile all'invisibile. La tua guida interiore è più affidabile di qualsiasi autorità esterna.",seeds:["Cerca un maestro — o diventa il maestro che avresti voluto avere.","Studia ciò che ti accende: è la tua mappa.","La saggezza si trasmette vivendo, non solo parlando."]},
+  6:{intro:"Gli Amanti sono il tuo arcano: sei qui per scegliere con tutto il cuore.",body:"Il tuo cammino è costellato di bivi profondi. Ogni scelta che fai con autenticità ti avvicina al tuo destino; ogni scelta fatta per paura ti allontana. L'amore — per te stesso, per gli altri, per ciò che fai — è la tua bussola.",seeds:["Scegli ciò che ti fa sentire intero, non ciò che ti fa sentire sicuro.","Le relazioni autentiche sono specchi del tuo scopo.","Ogni bivio è un invito a conoscerti più a fondo."]},
+  7:{intro:"Il Carro è la tua energia: sei un guerriero del destino in marcia.",body:"Hai una forza di volontà che può spostare montagne. Il tuo scopo si compie quando impari a guidare le tue energie opposte — emozione e ragione, impulso e strategia — verso un'unica direzione. La vittoria è già scritta, se non ti fermi.",seeds:["Identifica la tua direzione e non lasciare che nulla ti distragga.","La disciplina non è rigidità: è fedeltà a te stesso.","Ogni ostacolo è un test della tua rotta, non una negazione."]},
+  8:{intro:"La Forza è il tuo dono nascosto: non la forza che urla, ma quella che sussurra.",body:"Sei qui per dimostrare che il coraggio più grande è la dolcezza. La tua anima sa come domare le bestie interiori — paure, rabbie, ombre — non con la violenza ma con la presenza. Questa è la tua potenza più rara.",seeds:["Affronta ciò che temi con curiosità invece che con resistenza.","La tua vulnerabilità è la tua forza più autentica.","Sii gentile con te stesso: è da lì che nasce tutto il resto."]},
+  9:{intro:"L'Eremita illumina il tuo cammino: sei un cercatore di verità solitario e luminoso.",body:"Il tuo scopo non si trova nel rumore del mondo, ma in quei momenti di quiete in cui senti chiaramente chi sei. Sei qui per trovare la tua luce interiore e poi — quando sei pronto — per mostrarla agli altri come faro.",seeds:["Crea spazi di silenzio nella tua settimana: sono il tuo nutrimento.","La solitudine non è isolamento: è il luogo dove ti ritrovi.","Ciò che hai scoperto nel buio è il dono che il mondo aspetta."]},
+  10:{intro:"La Ruota del Destino gira con te: sei un essere di cicli e trasformazioni.",body:"La tua vita non è lineare — è una spirale. Ogni caduta porta in sé il seme della risalita; ogni fine è già un nuovo inizio travestito. Il tuo scopo si rivela quando smetti di resistere al movimento e impari a danzare con il cambiamento.",seeds:["Osserva i cicli della tua vita: cosa si ripete? Cosa vuole cambiare?","Resta al centro della ruota: lì c'è la pace che non dipende dalle circostanze.","Ogni svolta del destino ti porta più vicino a chi sei davvero."]},
+  11:{intro:"La Giustizia è il tuo codice interiore: sei qui per vivere in verità.",body:"La tua anima ha un senso innato dell'equilibrio. Senti quando qualcosa è fuori posto — in te, nelle relazioni, nel mondo. Il tuo scopo si compie quando hai il coraggio di dire la verità, di fare scelte allineate e di raccogliere con grazia ciò che hai seminato.",seeds:["Agisci sempre come se il tuo gesto fosse visibile all'universo.","Raddrizza ciò che senti storto: è la tua chiamata.","L'equilibrio non è immobilità: è un aggiustamento continuo e consapevole."]},
+  12:{intro:"L'Appeso ti guarda dal suo ramo: sei un'anima che vede il mondo al contrario degli altri.",body:"Il tuo dono è la prospettiva insolita. Dove gli altri vedono un ostacolo, tu puoi vedere un portale. Le tue pause, le tue attese, i tuoi momenti di sospensione non sono perdite di tempo: sono illuminazioni in gestazione.",seeds:["Smetti di forzare: ciò che non si muove ha bisogno di maturare.","Capovolgi il problema: la soluzione è spesso nell'angolo che non hai ancora guardato.","L'attesa consapevole è una forma di azione profonda."]},
+  13:{intro:"La Morte cammina al tuo fianco come alleata: sei un maestro di trasformazioni.",body:"Non temere i finali: sono la tua specialità. Ogni volta che qualcosa muore nella tua vita — una relazione, un'identità, un sogno — stai facendo spazio a qualcosa di più vero. Il tuo scopo si compie nell'arte di lasciar andare con grazia.",seeds:["Identifica cosa è già morto ma stai ancora tenendo in vita per paura.","Ogni fine che accetti con dignità è un atto di potere.","Ciò che emerge dopo ogni morte è sempre più autentico di prima."]},
+  14:{intro:"La Temperanza scorre nelle tue vene: sei un alchimista dell'anima.",body:"Il tuo scopo si trova nell'arte di mescolare — opposti, contraddizioni, polarità. Non sei fatto per gli estremi: sei fatto per trovare la terza via, quella che integra senza annullare. La tua guarigione e quella degli altri passa attraverso questa capacità rara.",seeds:["Cerca il punto di incontro tra ciò che ami e ciò che temi.","La pazienza non è passività: è fiducia nel processo.","Ogni integrazione che compi in te si riflette nel mondo attorno a te."]},
+  15:{intro:"Il Diavolo ti tende uno specchio: sei qui per liberarti e per liberare.",body:"Le tue catene non sono fuori di te — sono dentro. Ma la cosa straordinaria è che le hai messe tu, e tu puoi toglierle. Il tuo scopo più profondo è la liberazione: da ciò che ti limita, da ciò che ti definisce per paura, da ciò che consumi invece di nutrirti.",seeds:["Guarda in faccia ciò che ti tiene fermo: la consapevolezza è già metà della libertà.","Distingui i desideri che ti espandono da quelli che ti contraggono.","Ogni ombra che integri diventa una fonte di potere autentico."]},
+  16:{intro:"La Torre è la tua iniziazione: sei nato per costruire su fondamenta vere.",body:"Nella tua vita ci sono stati — o ci saranno — crolli improvvisi. Non sono punizioni: sono liberazioni. Ciò che cade era già falso. Il tuo scopo emerge proprio da quelle macerie, più chiaro e più solido di qualsiasi struttura che avevi costruito prima.",seeds:["Quando qualcosa crolla, chiedi: cosa di vero rimane?","La verità che libera è sempre più preziosa della certezza che imprigiona.","Ricostruisci lentamente, su ciò che non può essere distrutto."]},
+  17:{intro:"Le Stelle brillano per te: sei un portatore di speranza nel buio degli altri.",body:"Anche nei momenti più bui, qualcosa in te sa che la luce tornerà. Questa fede — non cieca, ma vissuta — è il tuo dono più grande. Il tuo scopo si compie quando condividi quella speranza, quando la tua presenza ricorda agli altri che vale la pena continuare.",seeds:["Coltiva la fiducia come si coltiva un giardino: ogni giorno, con cura.","I tuoi sogni non sono fughe dalla realtà: sono mappe del futuro.","Sii la stella che qualcuno sta cercando nel cielo."]},
+  18:{intro:"La Luna illumina il tuo cammino con luce riflessa: sei un navigatore dell'inconscio.",body:"Vivi in un mondo più ricco di quello che gli altri vedono. Le tue emozioni, i tuoi sogni, le tue intuizioni sono dati reali — non distrazioni. Il tuo scopo si compie quando impari a navigare queste acque profonde senza perderti, portando alla luce ciò che era nascosto.",seeds:["Tieni un diario dei sogni: il tuo inconscio ti sta parlando.","Distingui l'intuizione dalla paura: la prima espande, la seconda contrae.","Ciò che emerge dall'ombra, se accolto, diventa il tuo più grande alleato."]},
+  19:{intro:"Il Sole splende attraverso di te: sei qui per brillare senza scuse.",body:"La tua energia è contagiosa quando sei autentico. Il tuo scopo si compie quando smetti di nasconderti, quando esprimi la tua gioia senza chiedere permesso, quando la tua luce diventa un invito per gli altri a fare lo stesso. Non c'è nulla da nascondere: sei fatto di luce.",seeds:["Esprimi ciò che ti rende felice senza giustificazioni.","La tua gioia è un servizio al mondo, non un lusso.","Celebra ogni traguardo: il riconoscimento di sé è il primo passo verso la grandezza."]},
+  20:{intro:"Il Giudizio risuona nella tua anima: sei qui per rispondere a una chiamata più grande.",body:"C'è qualcosa che ti chiama — una voce che senti nei momenti di silenzio, un senso di missione che non riesci a ignorare del tutto. Il tuo scopo si compie quando smetti di rimandare quella risposta e inizi a vivere come se la tua vita avesse davvero un significato profondo.",seeds:["Ascolta la chiamata che hai rimandato: è ancora lì, paziente.","Fai il bilancio di ciò che hai vissuto: ogni esperienza era preparazione.","Rinascere non significa dimenticare: significa integrare e andare oltre."]},
+  21:{intro:"Il Mondo danza con te: sei un'anima che ha già tutto ciò di cui ha bisogno.",body:"Il tuo scopo non è da qualche parte nel futuro — è già qui, in questo momento, in questa vita. Sei chiamato a riconoscere la completezza di ciò che sei, a celebrare il viaggio compiuto e a condividere quella pienezza con il mondo. Sei già arrivato.",seeds:["Riconosci ciò che hai già realizzato: è più di quanto pensi.","La gratitudine per il presente è il portale verso il prossimo ciclo.","Condividi la tua pienezza: è il dono più grande che puoi offrire."]},
+  22:{intro:"Il Matto Iniziatico chiude il cerchio e lo riapre: sei un eterno viaggiatore dell'anima.",body:"Hai percorso l'intero viaggio degli arcani e ora sei di nuovo all'inizio — ma con tutta la saggezza accumulata. Il tuo scopo è il salto consapevole: non la fuga, ma la fiducia totale nel flusso cosmico. Sei libero in un modo che pochi comprendono.",seeds:["Integra ciò che hai imparato e poi lascialo andare.","Il prossimo passo non ha bisogno di essere spiegato: ha bisogno di essere vissuto.","La libertà vera nasce quando smetti di cercare la sicurezza e inizi a cercare la verità."]}
 };
+
+/* ── Numerologia pura (1-9) — Ciclo personale dell'anno ── */
+const numYearMap = {
+  1:{name:"Anno 1 — Inizio", focus:"Semina · Identità · Scelta", msg:"È tempo di iniziare: scegli una direzione e pianta i semi. Meglio un inizio vero che dieci attese perfette."},
+  2:{name:"Anno 2 — Relazione", focus:"Ascolto · Cooperazione · Pazienza", msg:"Non forzare: è un anno di ascolto e aggiustamento. Le persone giuste diventano specchi, non ostacoli."},
+  3:{name:"Anno 3 — Espressione", focus:"Creatività · Comunicazione · Espansione", msg:"Fatti vedere e fai uscire la voce: idee, contatti e opportunità crescono quando ti esprimi con leggerezza."},
+  4:{name:"Anno 4 — Struttura", focus:"Disciplina · Ordine · Fondamenta", msg:"Costruisci. È l'anno che rende stabile ciò che desideri. Piccoli gesti ripetuti battono grandi slanci sporadici."},
+  5:{name:"Anno 5 — Cambiamento", focus:"Movimento · Libertà · Svolta", msg:"L'energia chiede aria: cambiare, viaggiare, sperimentare. Se trattieni troppo, la vita ti muove lei."},
+  6:{name:"Anno 6 — Cura", focus:"Responsabilità · Amore adulto · Casa", msg:"Riordina il cuore e la casa: relazioni, famiglia, valori. Non salvare tutti: ama con confini chiari."},
+  7:{name:"Anno 7 — Verità", focus:"Introspezione · Studio · Spiritualità", msg:"Rallenta e ascolta. È un anno per capire, non per correre. La chiarezza arriva quando smetti di riempire il silenzio."},
+  8:{name:"Anno 8 — Risultati", focus:"Potere · Denaro · Realizzazione", msg:"Raccogli e misura: leadership e risultati. Se hai seminato bene, ora si vede. Se no, si corregge."},
+  9:{name:"Anno 9 — Chiusura", focus:"Lasciar andare · Sintesi · Rinascita", msg:"Completa e chiudi: taglia ciò che è finito. Il vuoto che crei diventa spazio per il prossimo ciclo."}
+};
+
+function reduceNumerology9(n) {
+  let num = Math.abs(Math.floor(Number(n) || 0));
+  const sumDigits = (v) => String(v).split('').reduce((a,c)=>a+Number(c),0);
+  while (num > 9) num = sumDigits(num);
+  return num;
+}
 
 /* ── SLIDER ── */
 function showAge(v) {
@@ -261,7 +290,7 @@ function showAge(v) {
   }
 }
 
-/* ── LETTURA POETICA HTML ── */
+/* ── LETTURA POETICA HTML (scopi) ── */
 function buildScopoHTML(label, arcVal) {
   const arc  = arcanaMap[arcVal]  || {name: `Arcano ${arcVal}`};
   const poet = arcanaPoetic[arcVal] || {
@@ -294,8 +323,69 @@ function buildScopoHTML(label, arcVal) {
   `;
 }
 
+/* ── NUOVO: FULCRO HTML ── */
+function buildFulcroHTML(fulcroVal) {
+  const arc  = arcanaMap[fulcroVal]  || {name: `Arcano ${fulcroVal}`, summary:""};
+  const poet = arcanaPoetic[fulcroVal] || {intro:"", body:"", seeds:["Ascolta.","Agisci.","Fidati."]};
+
+  return `
+    <h5>✦ Fulcro — la tua zona di comfort (E) — <em>${arc.name}</em></h5>
+    <p style="color:#7c6fa0; margin-bottom:8px;">
+      Il Fulcro è la vibrazione centrale della tua Matrice: l'energia a cui torni istintivamente quando vuoi ritrovarti, ricaricarti, riallinearti.
+      Non è una prigione: è la tua base. Quando lo onori, il corpo si rilassa e le scelte diventano più pulite.
+    </p>
+    <p><strong>${poet.intro || "Questa energia è il tuo punto di equilibrio."}</strong></p>
+    <p style="margin-top:6px;">${poet.body || arc.summary || ""}</p>
+    <ul>
+      ${(poet.seeds || ["Ascolta.","Agisci.","Fidati."]).slice(0,3).map(s => `<li>${s}</li>`).join('')}
+    </ul>
+    <p class="seed">✦ Domanda chiave: “Sto agendo in linea con il mio Fulcro, o lo sto tradendo?”</p>
+  `;
+}
+
+/* ── NUOVO: CICLO ANNUALE HTML (anno attuale + prossimo) ── */
+function buildCicloHTML(day, month) {
+  const today = new Date();
+  const y0 = today.getFullYear();
+  const y1 = y0 + 1;
+
+  const n0 = reduceNumerology9(day + month + y0);
+  const n1 = reduceNumerology9(day + month + y1);
+
+  const a0 = numYearMap[n0] || {name:`Anno ${n0}`, focus:"", msg:""};
+  const a1 = numYearMap[n1] || {name:`Anno ${n1}`, focus:"", msg:""};
+
+  return `
+    <h5>✦ Ciclo Personale dell’Anno (Numerologia pura 1–9)</h5>
+    <p style="color:#7c6fa0; margin-bottom:10px;">
+      Qui non stiamo leggendo un Arcano, ma la qualità del tempo. È il “tema” che attraversi nell’anno solare.
+      Per orientarti con lucidità, consideriamo sempre l’anno attuale e quello successivo.
+    </p>
+
+    <div style="display:flex; gap:12px; flex-wrap:wrap; margin-top:10px;">
+      <div style="flex:1; min-width:240px; background:#fbfdff; padding:14px; border-radius:10px; border:1px solid #eef2f5;">
+        <div style="color:#5b2fa6; font-weight:700; font-size:13px; text-transform:uppercase; letter-spacing:0.5px;">${y0}</div>
+        <div style="font-size:26px; font-weight:800; margin-top:4px;">${n0}</div>
+        <div style="color:#324155; font-weight:700; margin-top:6px;">${a0.name}</div>
+        <div style="color:#7c6fa0; font-size:13px; margin-top:4px;">${a0.focus}</div>
+        <p style="margin-top:10px; color:#444; line-height:1.6;">${a0.msg}</p>
+      </div>
+
+      <div style="flex:1; min-width:240px; background:#fbfdff; padding:14px; border-radius:10px; border:1px solid #eef2f5;">
+        <div style="color:#5b2fa6; font-weight:700; font-size:13px; text-transform:uppercase; letter-spacing:0.5px;">${y1}</div>
+        <div style="font-size:26px; font-weight:800; margin-top:4px;">${n1}</div>
+        <div style="color:#324155; font-weight:700; margin-top:6px;">${a1.name}</div>
+        <div style="color:#7c6fa0; font-size:13px; margin-top:4px;">${a1.focus}</div>
+        <p style="margin-top:10px; color:#444; line-height:1.6;">${a1.msg}</p>
+      </div>
+    </div>
+
+    <p class="seed">✦ Chiave pratica: se vivi l’energia “contro”, ti stanchi. Se la vivi “con”, ottieni risultati con meno sforzo.</p>
+  `;
+}
+
 /* ── LETTURA ATTUALE ── */
-function renderLettura(day, month, year, ages, personale, sociale, spirituale) {
+function renderLettura(day, month, year, letters, ages, personale, sociale, spirituale) {
   const today = new Date();
   const birth = new Date(year, month - 1, day);
   let age = today.getFullYear() - birth.getFullYear();
@@ -312,9 +402,16 @@ function renderLettura(day, month, year, ages, personale, sociale, spirituale) {
   document.getElementById('currentArcanaText').innerText = `${arc.name} — ${arc.summary}`;
   document.getElementById('currentAdvice').innerText = poet ? poet.seeds[0] : arc.summary;
 
+  // Fulcro (E)
+  document.getElementById('readingFulcroWrap').innerHTML = buildFulcroHTML(letters.E);
+
+  // Scopi
   document.getElementById('readingPersonalWrap').innerHTML  = buildScopoHTML('personal',  personale);
   document.getElementById('readingSocialWrap').innerHTML    = buildScopoHTML('social',    sociale);
   document.getElementById('readingSpiritualWrap').innerHTML = buildScopoHTML('spiritual', spirituale);
+
+  // Ciclo personale dell'anno (anno attuale + prossimo)
+  document.getElementById('readingCicloWrap').innerHTML = buildCicloHTML(day, month);
 
   document.getElementById('lettura').style.display = 'block';
 }
@@ -359,13 +456,13 @@ function calcola() {
   document.getElementById('ageSlider').value = 0;
   showAge(0);
 
-  renderLettura(d, m, y, ages, personale, sociale, spirituale);
+  renderLettura(d, m, y, letters, ages, personale, sociale, spirituale);
 }
-
-// La pagina parte vuota — l'utente inserisce la propria data.
 </script>
+
   </div>
   </div>
+
   <!-- SEZIONE PROMO LIBRO "IL CODICE DELL'ALCHIMISTA" -->
 <div style="margin-top: 40px; max-width:1100px; width:98vw; padding: 30px; background: linear-gradient(135deg, #5b2fa6 0%, #3a1c6a 100%); border-radius: 16px; color: #fff; box-shadow: 0 10px 25px rgba(91, 47, 166, 0.2); text-align: center; box-sizing:border-box;">
   <h3 style="margin: 0 0 15px; font-size: 22px; color: #fff; font-weight: 700;">✨ Niente è Casuale: Oltre la Matrice</h3>
