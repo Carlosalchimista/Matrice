@@ -64,9 +64,9 @@
   <p style="margin:0;">Inserisci la tua data di nascita qui sotto per scoprire la tua mappa. 👇</p>
 </div>
   <div class="row">
-    <input id="day" type="number" placeholder="Giorno (GG)" min="1" max="31" value="10">
-    <input id="month" type="number" placeholder="Mese (MM)" min="1" max="12" value="6">
-    <input id="year" type="number" placeholder="Anno (AAAA)" min="1000" max="9999" value="1984">
+    <input id="day" type="number" placeholder="Giorno (GG)" min="1" max="31">
+    <input id="month" type="number" placeholder="Mese (MM)" min="1" max="12">
+    <input id="year" type="number" placeholder="Anno (AAAA)" min="1000" max="9999">
     <button onclick="calcola()">Decodifica Destino</button>
   </div>
 
@@ -362,7 +362,7 @@ function calcola() {
   renderLettura(d, m, y, ages, personale, sociale, spirituale);
 }
 
-document.addEventListener('DOMContentLoaded', calcola);
+// La pagina parte vuota — l'utente inserisce la propria data.
 </script>
   </div>
   </div>
