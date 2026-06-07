@@ -117,9 +117,14 @@
         </div>
       </div>
 
-      <div style="margin-top:24px; border-top: 1px solid #eee; padding-top: 20px;">
-        <h4 style="margin:0 0 12px; color: #6b7280; font-weight: 500;">Lista completa dei cicli annuali</h4>
-        <div id="allValues" class="all-values"></div>
+    <div style="margin-top:24px; border-top: 1px solid #eee; padding-top: 20px;">
+        <div style="display:flex; justify-content:space-between; align-items:center; gap:12px;">
+          <h4 style="margin:0; color:#6b7280; font-weight:500;">Lista completa dei cicli annuali</h4>
+          <button id="togglePrognosiBtn" style="background:#fff; color:#5b2fa6; border:1px solid #dcd0f0; padding:8px 12px; border-radius:8px; cursor:pointer;">
+            Mostra elenco completo (facoltativo)
+          </button>
+        </div>
+        <div id="allValues" class="all-values" style="display:none; margin-top:12px;"></div>
       </div>
     </div>
 
@@ -453,7 +458,20 @@ function calcola() {
 
   renderLettura(d, m, y, letters, ages, personale, sociale, spirituale);
 }
-
+// Toggle: mostra/nasconde la "Lista completa dei cicli annuali"
+  (function(){
+  const btn = document.getElementById('togglePrognosiBtn');
+  const all = document.getElementById('allValues');
+  if(!btn || !all) return;
+  btn.addEventListener('click', () => {
+    const isShown = getComputedStyle(all).display !== 'none';
+    all.style.display = isShown ? 'none' : 'flex';
+    btn.textContent = isShown ? 'Mostra elenco completo (facoltativo)' : 'Nascondi elenco completo';
+    if (!isShown) {
+      setTimeout(()=> all.scrollIntoView({behavior:'smooth', block:'center'}), 120);
+    }
+  });
+})();
 // La pagina parte vuota — l'utente inserisce la propria data.
 </script>
   </div>
